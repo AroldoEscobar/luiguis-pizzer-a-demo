@@ -25,6 +25,7 @@
     --line:     #e3dccb;   /* bordes algo más marcados, ya que tarjetas y fondo son ambos blancos */
     --muted:    #8a7860;   /* gris cálido para texto secundario */
     --shadow:   0 2px 10px rgba(91,58,34,0.06);
+    --shadow-lg:0 14px 36px rgba(91,58,34,0.14);
   }
 
   *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -81,112 +82,204 @@
   .lockup .tag{ font-size:9.5px; color:var(--muted); letter-spacing:.04em; margin-top:1px; }
 
   /* ============================================================
-     1) VISTA CLIENTE
+     1) VISTA CLIENTE — landing page de pizzería + flujo de pedido
      ============================================================ */
-  #view-cliente{ max-width:480px; margin:0 auto; padding-bottom:130px; position:relative; }
+  #view-cliente{ max-width:560px; margin:0 auto; padding-bottom:130px; position:relative; }
 
+  /* --- hero tipo landing --- */
   .c-hero{
-    padding:22px 20px 24px;
-    background:var(--paper-2);
-    border-bottom:3px solid var(--line);
+    position:relative;
+    padding:34px 24px 30px;
+    background:
+      radial-gradient(140% 100% at 50% 0%, #fdeeea 0%, #ffffff 55%);
+    border-bottom:1px solid var(--line);
     text-align:center;
+    overflow:hidden;
   }
-  .c-hero .lockup{ justify-content:center; margin-bottom:14px; }
-  .c-hero .name{ font-size:34px; }
-  .c-hero .slogan{ font-family:'Caveat',cursive; font-weight:600; color:var(--olive); font-size:17px; margin-top:-4px; }
+  .c-hero::before{
+    content:'🍕'; position:absolute; font-size:120px; opacity:0.06;
+    top:-30px; right:-20px; transform:rotate(18deg);
+  }
+  .c-hero .lockup{ justify-content:center; margin-bottom:6px; position:relative; z-index:1; }
+  .c-hero .mark{ width:46px; height:46px; font-size:18px; box-shadow:var(--shadow); }
+  .c-hero .name{ font-size:38px; }
+  .c-hero .slogan{ font-family:'Caveat',cursive; font-weight:600; color:var(--olive); font-size:18px; margin-top:-6px; position:relative; z-index:1; }
+
+  .c-hero-headline{
+    margin-top:18px; font-size:21px; line-height:1.3; color:var(--crust);
+    position:relative; z-index:1; max-width:380px; margin-left:auto; margin-right:auto;
+  }
+  .c-hero-headline b{ color:var(--tomato); }
 
   .c-status-pill{
-    display:inline-flex; align-items:center; gap:7px; margin-top:14px;
-    padding:7px 14px; background:var(--olive-bg); border:1px solid #d3dcc1;
+    display:inline-flex; align-items:center; gap:7px; margin-top:16px;
+    padding:8px 16px; background:var(--olive-bg); border:1px solid #d3dcc1;
     border-radius:100px; font-size:12.5px; color:var(--olive); font-weight:700;
+    position:relative; z-index:1;
   }
   .c-status-pill .dot{ width:7px; height:7px; border-radius:50%; background:var(--olive); }
 
-  .c-section-label{
-    padding:20px 20px 10px; font-size:13px; letter-spacing:.02em;
-    color:var(--muted); font-weight:700; text-transform:uppercase;
+  /* --- strip de confianza / mini-features --- */
+  .c-features{
+    display:grid; grid-template-columns:1fr 1fr 1fr; gap:1px;
+    background:var(--line); border-bottom:1px solid var(--line);
   }
+  .c-feature{ background:#fff; padding:16px 10px; text-align:center; }
+  .c-feature .ico{ font-size:20px; margin-bottom:6px; }
+  .c-feature .txt{ font-size:11px; font-weight:700; color:var(--crust); line-height:1.3; }
 
-  .menu-list{ padding:0 14px; display:flex; flex-direction:column; gap:10px; }
+  /* --- category chips --- */
+  .c-section{ padding:26px 20px 6px; }
+  .c-section-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:14px; }
+  .c-section-label{ font-size:19px; font-weight:700; color:var(--crust); font-family:'Fredoka',sans-serif; }
+  .c-section-sub{ font-size:12.5px; color:var(--muted); margin-top:2px; }
+
+  .cat-row{ display:flex; gap:8px; padding:0 20px 16px; overflow-x:auto; }
+  .cat-chip{
+    flex-shrink:0; padding:9px 16px; border-radius:100px; border:1.5px solid var(--line);
+    font-size:13px; font-weight:700; color:var(--muted); cursor:pointer; white-space:nowrap;
+    background:#fff;
+  }
+  .cat-chip.active{ background:var(--tomato); border-color:var(--tomato); color:#fff; }
+
+  /* --- pizza cards: ahora con imagen-zona, badge y precio destacado --- */
+  .menu-list{ padding:0 16px; display:flex; flex-direction:column; gap:14px; }
 
   .pizza-card{
-    background:var(--cream); border:1.5px solid var(--line); border-radius:16px;
-    padding:13px; display:flex; gap:13px; cursor:pointer; box-shadow:0 3px 12px rgba(91,58,34,0.08);
-    transition:transform .12s ease, border-color .15s ease;
+    background:#fff; border:1.5px solid var(--line); border-radius:20px;
+    padding:16px; display:flex; gap:16px; cursor:pointer; box-shadow:var(--shadow);
+    transition:transform .12s ease, box-shadow .15s ease;
+    position:relative;
   }
   .pizza-card:active{ transform:scale(0.985); }
-  .pizza-card.selected{ border-color:var(--tomato); }
 
   .pizza-thumb{
-    width:68px; height:68px; border-radius:50%; flex-shrink:0;
-    display:flex; align-items:center; justify-content:center; font-size:30px;
-    background:var(--paper-2); border:2px solid var(--cream);
+    width:84px; height:84px; border-radius:18px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:38px;
+    background:linear-gradient(155deg, #fff4ea, #fdeeea);
+    border:1px solid var(--line);
   }
-  .pizza-info{ flex:1; min-width:0; }
-  .pizza-info h3{ font-size:16px; margin:0 0 3px; }
-  .pizza-info p{ font-size:12.5px; color:var(--muted); margin:0 0 8px; line-height:1.4; }
-  .pizza-price{ font-weight:800; color:var(--tomato); font-size:14.5px; }
+  .pizza-info{ flex:1; min-width:0; display:flex; flex-direction:column; }
+  .pizza-info-top{ display:flex; justify-content:space-between; gap:8px; align-items:flex-start; }
+  .pizza-info h3{ font-size:17px; margin:0 0 4px; }
+  .pizza-badge{
+    font-size:10px; font-weight:800; padding:3px 8px; border-radius:7px; flex-shrink:0;
+    background:var(--olive-bg); color:var(--olive); white-space:nowrap; text-transform:uppercase;
+  }
+  .pizza-badge.spicy{ background:#fde6e3; color:var(--tomato-d); }
+  .pizza-info p{ font-size:12.5px; color:var(--muted); margin:0 0 10px; line-height:1.45; }
+  .pizza-bottom{ display:flex; align-items:center; justify-content:space-between; margin-top:auto; }
+  .pizza-price{ font-weight:800; color:var(--tomato); font-size:16px; }
+  .pizza-add-hint{
+    font-size:11.5px; font-weight:700; color:#fff; background:var(--tomato);
+    padding:6px 13px; border-radius:9px;
+  }
 
+  /* --- carrito flotante --- */
   .cart-bar{
-    position:fixed; bottom:16px; left:16px; right:16px; max-width:448px; margin:0 auto;
-    background:var(--tomato); border-radius:16px; padding:15px 18px;
+    position:fixed; bottom:16px; left:16px; right:16px; max-width:528px; margin:0 auto;
+    background:var(--crust); border-radius:18px; padding:16px 20px;
     display:none; align-items:center; justify-content:space-between;
-    box-shadow:0 10px 26px rgba(200,49,31,0.32); cursor:pointer; z-index:50;
+    box-shadow:var(--shadow-lg); cursor:pointer; z-index:50;
   }
   .cart-bar.show{ display:flex; }
-  .cart-bar .left{ color:#fff; font-weight:700; font-size:14px; }
-  .cart-bar .left small{ display:block; font-weight:500; font-size:11px; opacity:.85; }
+  .cart-bar .left{ color:#fff; font-weight:700; font-size:14px; display:flex; align-items:center; gap:10px; }
+  .cart-bar .cart-ico{ width:30px; height:30px; border-radius:50%; background:var(--tomato); display:flex; align-items:center; justify-content:center; font-size:14px; }
+  .cart-bar .left small{ display:block; font-weight:500; font-size:11px; opacity:.75; }
   .cart-bar .right{ color:#fff; font-weight:800; font-size:16px; }
 
+  /* --- sheet de personalización: ahora con resumen visual "tu pizza" --- */
   .sheet-overlay{
-    position:fixed; inset:0; background:rgba(58,44,29,0.45); z-index:100;
+    position:fixed; inset:0; background:rgba(58,44,29,0.5); z-index:100;
     display:none; align-items:flex-end; justify-content:center;
   }
   .sheet-overlay.show{ display:flex; }
   .sheet{
-    background:var(--cream); width:100%; max-width:480px; border-radius:22px 22px 0 0;
-    padding:22px 20px 26px; max-height:84vh; overflow-y:auto; animation:slideUp .25s ease;
+    background:#fff; width:100%; max-width:560px; border-radius:26px 26px 0 0;
+    max-height:88vh; overflow-y:auto; animation:slideUp .25s ease;
   }
   @keyframes slideUp{ from{ transform:translateY(100%); } to{ transform:translateY(0); } }
-  .sheet-handle{ width:36px; height:4px; background:var(--line); border-radius:10px; margin:0 auto 16px; }
-  .sheet h2{ font-size:21px; }
-  .sheet .sheet-price{ color:var(--tomato); font-weight:800; margin-bottom:16px; font-size:14px; }
 
-  .opt-group-label{ font-size:12px; text-transform:uppercase; color:var(--muted); font-weight:700; margin:16px 0 9px; }
+  .sheet-hero{
+    padding:18px 22px 16px; background:linear-gradient(155deg, #fff4ea, #fdeeea);
+    border-radius:26px 26px 0 0; display:flex; gap:14px; align-items:center;
+    position:sticky; top:0; z-index:2;
+  }
+  .sheet-handle{ width:36px; height:4px; background:rgba(74,53,32,0.18); border-radius:10px; position:absolute; top:9px; left:50%; transform:translateX(-50%); }
+  .sheet-thumb{ width:58px; height:58px; border-radius:14px; background:#fff; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; font-size:28px; flex-shrink:0; }
+  .sheet-hero-text h2{ font-size:19px; margin:0 0 2px; }
+  .sheet-hero-text .sheet-price{ color:var(--tomato); font-weight:800; font-size:13.5px; }
+  .sheet-close{
+    position:absolute; top:14px; right:16px; width:30px; height:30px; border-radius:50%;
+    background:#fff; border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:14px; color:var(--muted);
+  }
+
+  .sheet-body{ padding:18px 22px 22px; }
+
+  .opt-group-label{ font-size:12.5px; text-transform:uppercase; color:var(--muted); font-weight:800; margin:18px 0 10px; letter-spacing:.02em; }
+  .opt-group-label:first-child{ margin-top:4px; }
+  .opt-group-hint{ font-size:11.5px; color:var(--muted); font-weight:500; text-transform:none; letter-spacing:0; margin-left:6px; }
+
   .size-row{ display:flex; gap:8px; }
   .size-pill{
-    flex:1; text-align:center; padding:10px 0; border:1.5px solid var(--line); border-radius:12px;
-    font-size:13px; font-weight:700; color:var(--muted); cursor:pointer;
+    flex:1; text-align:center; padding:12px 4px; border:1.5px solid var(--line); border-radius:13px;
+    cursor:pointer; transition:border-color .15s ease;
   }
-  .size-pill.active{ border-color:var(--tomato); color:var(--tomato); background:#fdeeea; }
+  .size-pill .sp-name{ font-size:13px; font-weight:800; color:var(--crust); display:block; }
+  .size-pill .sp-sub{ font-size:10.5px; color:var(--muted); display:block; margin-top:1px; }
+  .size-pill.active{ border-color:var(--tomato); background:#fdeeea; }
+  .size-pill.active .sp-name{ color:var(--tomato); }
 
-  .ing-row{ display:flex; align-items:center; justify-content:space-between; padding:10px 2px; border-bottom:1px solid var(--paper-2); }
-  .ing-row:last-child{ border-bottom:none; }
-  .ing-name{ font-size:13.5px; color:var(--crust); font-weight:600; }
-  .ing-extra{ font-size:11px; color:var(--muted); }
-  .toggle{ width:42px; height:25px; border-radius:100px; background:#e4d9c4; position:relative; cursor:pointer; flex-shrink:0; transition:background .2s; }
-  .toggle.on{ background:var(--olive); }
-  .toggle .knob{ position:absolute; top:3px; left:3px; width:19px; height:19px; border-radius:50%; background:#fff; transition:left .2s; }
-  .toggle.on .knob{ left:20px; }
+  .ing-section-title{ display:flex; align-items:center; gap:7px; font-size:13px; font-weight:800; color:var(--crust); margin:16px 0 8px; }
+  .ing-section-title .ico{ font-size:14px; }
 
-  .qty-row{ display:flex; align-items:center; justify-content:space-between; margin-top:18px; }
+  .ing-row{
+    display:flex; align-items:center; justify-content:space-between; padding:11px 12px;
+    border:1.5px solid var(--line); border-radius:12px; margin-bottom:8px; background:#fff;
+    transition:border-color .15s ease;
+  }
+  .ing-row.active-remove{ border-color:#e8a13b; background:#fffaf0; }
+  .ing-row.active-add{ border-color:var(--olive); background:var(--olive-bg); }
+  .ing-name{ font-size:13.5px; color:var(--crust); font-weight:700; }
+  .ing-extra{ font-size:11px; color:var(--muted); margin-top:1px; }
+
+  .ing-toggle-btn{
+    border:1.5px solid var(--line); background:#fff; border-radius:9px; padding:7px 12px;
+    font-size:11.5px; font-weight:800; cursor:pointer; color:var(--muted); flex-shrink:0;
+  }
+  .ing-toggle-btn.is-removed{ border-color:#e8a13b; color:#b5791f; background:#fffaf0; }
+  .ing-toggle-btn.is-added{ border-color:var(--olive); color:var(--olive); background:var(--olive-bg); }
+
+  .qty-row{ display:flex; align-items:center; justify-content:space-between; margin-top:20px; padding-top:18px; border-top:1px solid var(--line); }
   .qty-control{ display:flex; align-items:center; gap:14px; }
-  .qty-btn{ width:32px; height:32px; border-radius:9px; border:1.5px solid var(--line); background:#fff; color:var(--crust); font-size:17px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700; }
-  .qty-val{ font-weight:800; font-size:15px; min-width:16px; text-align:center; }
+  .qty-btn{ width:34px; height:34px; border-radius:10px; border:1.5px solid var(--line); background:#fff; color:var(--crust); font-size:18px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700; }
+  .qty-val{ font-weight:800; font-size:16px; min-width:18px; text-align:center; }
+
+  /* resumen "tu pizza" antes del botón */
+  .order-summary{
+    margin-top:18px; padding:14px; background:var(--paper-2); border-radius:14px;
+    font-size:12.5px; color:var(--ink); line-height:1.6;
+  }
+  .order-summary .os-title{ font-weight:800; color:var(--crust); font-size:12.5px; margin-bottom:6px; text-transform:uppercase; letter-spacing:.02em; }
+  .order-summary .os-line{ display:flex; justify-content:space-between; }
+  .order-summary .os-muted{ color:var(--muted); }
 
   .btn-primary{
-    width:100%; margin-top:20px; padding:15px; background:var(--tomato); color:#fff;
-    border:none; border-radius:13px; font-family:'Nunito',sans-serif; font-weight:800; font-size:14.5px; cursor:pointer;
+    width:100%; margin-top:16px; padding:16px; background:var(--tomato); color:#fff;
+    border:none; border-radius:14px; font-family:'Nunito',sans-serif; font-weight:800; font-size:15px; cursor:pointer;
+    box-shadow:0 8px 20px rgba(200,49,31,0.25);
   }
   .btn-primary:active{ background:var(--tomato-d); }
   .btn-ghost{ width:100%; margin-top:8px; padding:13px; background:transparent; color:var(--muted); border:none; font-weight:700; font-size:13px; cursor:pointer; }
 
+  /* --- confirmación --- */
   .confirm-screen{ display:none; min-height:100vh; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px 30px; }
   .confirm-screen.show{ display:flex; }
-  .confirm-icon{ width:80px; height:80px; border-radius:50%; background:var(--olive-bg); border:2px solid var(--olive); display:flex; align-items:center; justify-content:center; font-size:36px; margin-bottom:20px; color:var(--olive); }
-  .confirm-screen h2{ font-size:23px; margin:0 0 8px; }
+  .confirm-icon{ width:84px; height:84px; border-radius:50%; background:var(--olive-bg); border:2px solid var(--olive); display:flex; align-items:center; justify-content:center; font-size:38px; margin-bottom:22px; color:var(--olive); }
+  .confirm-screen h2{ font-size:24px; margin:0 0 8px; }
   .confirm-screen p{ color:var(--muted); font-size:14px; line-height:1.55; max-width:300px; margin:0 0 24px; }
-  .order-code{ font-family:'Fredoka',sans-serif; font-size:28px; font-weight:700; color:var(--tomato); margin-bottom:26px; }
+  .order-code{ font-family:'Fredoka',sans-serif; font-size:30px; font-weight:700; color:var(--tomato); margin-bottom:26px; }
 
   /* ============================================================
      SHELL ADMINISTRATIVO compartido (Caja / Admin / Inventario)
@@ -223,6 +316,20 @@
   }
   .live-badge .dot{ width:7px; height:7px; border-radius:50%; background:var(--olive); animation:pulse 1.6s infinite; }
   @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.3; } }
+
+  .btn-new-order{
+    background:var(--tomato); color:#fff; border:none; border-radius:11px;
+    padding:10px 16px; font-family:'Nunito',sans-serif; font-weight:800; font-size:13px;
+    cursor:pointer; box-shadow:0 4px 12px rgba(200,49,31,0.25); white-space:nowrap;
+  }
+  .btn-new-order:active{ background:var(--tomato-d); }
+
+  .order-source{
+    font-size:10px; font-weight:800; padding:2px 8px; border-radius:6px; text-transform:uppercase;
+    letter-spacing:.02em;
+  }
+  .order-source.src-cliente{ background:#e6eef7; color:#3c6aa0; }
+  .order-source.src-caja{ background:var(--olive-bg); color:var(--olive); }
 
   .kpi-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:13px; margin-bottom:24px; }
   .kpi-card{ background:var(--cream); border:1px solid var(--line); border-radius:14px; padding:16px; box-shadow:var(--shadow); }
@@ -308,6 +415,67 @@
   .inv-status.low{ background:#fdf3e3; color:#8a6420; }
   .inv-status.crit{ background:#fde6e3; color:var(--tomato-d); }
 
+  /* ============================================================
+     5) VISTA CONTADOR
+     ============================================================ */
+  .scope-banner{
+    border-radius:14px; padding:14px 16px; margin-bottom:22px; display:flex; gap:12px; align-items:flex-start;
+  }
+  .scope-banner.fel{ background:#fdf3e3; border:1.5px solid var(--cheese); }
+  .scope-banner.fel b{ color:#7a4f10; font-size:13.5px; }
+  .scope-banner.fel p{ margin:4px 0 0; font-size:12.5px; color:#8a6420; line-height:1.5; }
+
+  .scope-banner.extra{ background:#eaf1f8; border:1.5px solid #9fc1de; }
+  .scope-banner.extra b{ color:#2c5b80; font-size:13.5px; }
+  .scope-banner.extra p{ margin:4px 0 0; font-size:12.5px; color:#3c6a8f; line-height:1.5; }
+  .scope-banner .ico{ font-size:20px; }
+
+  .acct-tabs{ display:flex; gap:6px; margin-bottom:22px; border-bottom:1px solid var(--line); }
+  .acct-tab{
+    padding:10px 16px; font-size:13.5px; font-weight:700; color:var(--muted);
+    cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px;
+  }
+  .acct-tab.active{ color:var(--tomato); border-bottom-color:var(--tomato); }
+  .acct-panel{ display:none; }
+  .acct-panel.active{ display:block; }
+
+  .summary-row{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-bottom:22px; }
+  .summary-card{ background:var(--cream); border:1.5px solid var(--line); border-radius:14px; padding:18px; box-shadow:var(--shadow); }
+  .summary-card .label{ font-size:12px; color:var(--muted); font-weight:700; text-transform:uppercase; margin-bottom:8px; }
+  .summary-card .value{ font-family:'Fredoka',sans-serif; font-size:25px; font-weight:600; }
+  .summary-card.income .value{ color:var(--olive); }
+  .summary-card.expense .value{ color:var(--tomato); }
+  .summary-card.net .value{ color:var(--crust); }
+  .summary-card .sub{ font-size:11.5px; color:var(--muted); margin-top:4px; }
+
+  .expense-form{
+    background:var(--cream); border:1.5px solid var(--line); border-radius:14px; padding:18px;
+    margin-bottom:20px; box-shadow:var(--shadow);
+  }
+  .form-row{ display:grid; grid-template-columns:2fr 1fr 1fr auto; gap:10px; align-items:end; }
+  .form-field label{ display:block; font-size:11.5px; font-weight:700; color:var(--muted); margin-bottom:6px; text-transform:uppercase; }
+  .form-field input, .form-field select{
+    width:100%; padding:10px 12px; border:1.5px solid var(--line); border-radius:10px;
+    font-family:'Nunito',sans-serif; font-size:13.5px; color:var(--crust); background:#fff;
+  }
+  .btn-add-row{
+    background:var(--tomato); color:#fff; border:none; border-radius:10px;
+    padding:11px 18px; font-weight:800; font-size:13px; cursor:pointer; white-space:nowrap;
+  }
+
+  .po-card{ background:var(--cream); border:1.5px solid var(--line); border-radius:14px; padding:16px; margin-bottom:12px; box-shadow:var(--shadow); }
+  .po-top{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+  .po-id{ font-family:'Fredoka',sans-serif; font-weight:600; color:var(--crust); font-size:14.5px; }
+  .po-supplier{ font-size:12px; color:var(--muted); }
+  .po-status{ font-size:11px; font-weight:800; padding:4px 10px; border-radius:100px; }
+  .po-status.pendiente{ background:#fdf3e3; color:#8a6420; }
+  .po-status.recibido{ background:var(--olive-bg); color:var(--olive); }
+  .po-items{ font-size:12.5px; color:var(--muted); line-height:1.6; margin-bottom:10px; }
+  .po-items b{ color:var(--crust); }
+  .po-total{ font-size:13px; font-weight:800; color:var(--tomato); margin-bottom:10px; }
+  .po-action{ width:100%; padding:9px; border-radius:9px; border:none; font-weight:800; font-size:12.5px; cursor:pointer; background:var(--olive); color:#fff; }
+  .po-action:disabled{ background:transparent; border:1px solid var(--line); color:var(--muted); cursor:default; }
+
   @media (max-width: 900px){
     .kpi-row{ grid-template-columns:1fr 1fr !important; }
     .board{ grid-template-columns:1fr; }
@@ -325,6 +493,7 @@
   <button id="btn-view-caja" onclick="switchView('caja')">Caja</button>
   <button id="btn-view-admin" onclick="switchView('admin')">Administrador</button>
   <button id="btn-view-inv" onclick="switchView('inv')">Inventario</button>
+  <button id="btn-view-contador" onclick="switchView('contador')">Contador</button>
 </div>
 
 <!-- ============================================================ -->
@@ -335,29 +504,68 @@
     <div class="c-hero">
       <div class="lockup"><div class="mark">L</div><div class="name">Luigi's Pizza</div></div>
       <div class="slogan">más pizza, más sabor!!!</div>
+      <div class="c-hero-headline">Pizza recién horneada, lista para recoger. <b>Elige, personaliza y nosotros la preparamos.</b></div>
       <div class="c-status-pill"><span class="dot"></span> Abierto ahora · listo en ~20 min</div>
     </div>
 
-    <div class="c-section-label">Nuestras pizzas</div>
+    <div class="c-features">
+      <div class="c-feature"><div class="ico">🔥</div><div class="txt">Horneada al momento</div></div>
+      <div class="c-feature"><div class="ico">🧀</div><div class="txt">Ingredientes a tu gusto</div></div>
+      <div class="c-feature"><div class="ico">🏪</div><div class="txt">Recoges en tienda</div></div>
+    </div>
+
+    <div class="c-section">
+      <div class="c-section-head">
+        <div>
+          <div class="c-section-label">Nuestras pizzas</div>
+          <div class="c-section-sub">Toca una pizza para elegir tamaño e ingredientes</div>
+        </div>
+      </div>
+    </div>
+    <div class="cat-row" id="cat-row"></div>
+
     <div class="menu-list" id="menu-list"></div>
   </div>
 
   <div class="cart-bar" id="cart-bar">
-    <div class="left">1 pizza en tu pedido <small>Toca para enviar</small></div>
+    <div class="left"><div class="cart-ico">🛒</div><div>1 pizza en tu pedido<small>Toca para enviar</small></div></div>
     <div class="right" id="cart-total">Q0</div>
   </div>
 
-  <div class="sheet-overlay" id="sheet-overlay">
-    <div class="sheet">
+  <div class="confirm-screen" id="confirm-screen">
+    <div class="confirm-icon">✓</div>
+    <h2>¡Pedido recibido!</h2>
+    <p>Tu pizza ya está en cocina. Te avisaremos en cuanto esté lista para recoger en tienda.</p>
+    <div class="order-code" id="order-code">#104</div>
+    <button class="btn-primary" style="max-width:280px;" onclick="resetClientView()">Hacer otro pedido</button>
+  </div>
+</div>
+
+<!-- Overlay de personalización de pizza — global, fuera de cualquier .view,
+     para que funcione tanto desde el menú del cliente como desde "Nuevo pedido en tienda" en Caja -->
+<div class="sheet-overlay" id="sheet-overlay">
+  <div class="sheet">
+    <div class="sheet-hero">
       <div class="sheet-handle"></div>
-      <h2 id="sheet-name">Pizza</h2>
-      <div class="sheet-price" id="sheet-base-price">Q0</div>
+      <div class="sheet-thumb" id="sheet-thumb">🍕</div>
+      <div class="sheet-hero-text">
+        <h2 id="sheet-name">Pizza</h2>
+        <div class="sheet-price" id="sheet-base-price">Desde Q0</div>
+      </div>
+      <div class="sheet-close" onclick="closeSheet()">✕</div>
+    </div>
+
+    <div class="sheet-body">
+      <div class="cat-row" id="sheet-pizza-picker" style="display:none; padding:0 0 16px; margin:0;"></div>
 
       <div class="opt-group-label">Tamaño</div>
       <div class="size-row" id="size-row"></div>
 
-      <div class="opt-group-label">Ingredientes extra</div>
-      <div id="ing-list"></div>
+      <div class="ing-section-title"><span class="ico">➖</span> Quitar ingredientes <span class="opt-group-hint">si no quieres alguno de la receta original</span></div>
+      <div id="remove-list"></div>
+
+      <div class="ing-section-title"><span class="ico">➕</span> Agregar extras <span class="opt-group-hint">con costo adicional</span></div>
+      <div id="add-list"></div>
 
       <div class="qty-row">
         <div class="opt-group-label" style="margin:0;">Cantidad</div>
@@ -368,17 +576,11 @@
         </div>
       </div>
 
-      <button class="btn-primary" onclick="addToCartAndSend()">Enviar pedido — <span id="sheet-total">Q0</span></button>
-      <button class="btn-ghost" onclick="closeSheet()">Cancelar</button>
-    </div>
-  </div>
+      <div class="order-summary" id="order-summary"></div>
 
-  <div class="confirm-screen" id="confirm-screen">
-    <div class="confirm-icon">✓</div>
-    <h2>¡Pedido recibido!</h2>
-    <p>Tu pizza ya está en cocina. Te avisaremos en cuanto esté lista para recoger en tienda.</p>
-    <div class="order-code" id="order-code">#104</div>
-    <button class="btn-primary" style="max-width:280px;" onclick="resetClientView()">Hacer otro pedido</button>
+      <button class="btn-primary" id="sheet-submit-btn" onclick="addToCartAndSend()"><span id="sheet-submit-label">Enviar pedido</span> — <span id="sheet-total">Q0</span></button>
+      <button class="btn-ghost" onclick="closeSheet()" id="sheet-cancel-btn">Cancelar</button>
+    </div>
   </div>
 </div>
 
@@ -396,7 +598,10 @@
     <div class="admin-main">
       <div class="admin-header">
         <div><h1>Pedidos de hoy</h1><div class="sub">Sábado 27 de junio</div></div>
-        <div class="live-badge"><span class="dot"></span> En vivo</div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button class="btn-new-order" onclick="openSheet(MENU[0], 'caja')">+ Nuevo pedido en tienda</button>
+          <div class="live-badge"><span class="dot"></span> En vivo</div>
+        </div>
       </div>
 
       <div class="kpi-row" style="grid-template-columns:repeat(6,1fr);">
@@ -451,7 +656,7 @@
         <div class="kpi-card"><div class="label">Facturas FEL emitidas</div><div class="value" style="color:var(--muted);">0 (fase 2)</div></div>
       </div>
 
-      <div class="fel-banner">
+      <div class="scope-banner fel">
         <div class="ico">⚠️</div>
         <div>
           <b>Esta sección es una vista de referencia — no incluida en el alcance actual</b>
@@ -499,20 +704,144 @@
   </div>
 </div>
 
+<!-- ============================================================ -->
+<!-- 5) VISTA CONTADOR -->
+<!-- ============================================================ -->
+<div id="view-contador" class="view">
+  <div class="admin-shell">
+    <div class="admin-sidebar">
+      <div class="lockup"><div class="mark">L</div><div class="name">Luigi's</div></div>
+      <div class="role-pill">Contador</div>
+      <a class="nav-item active">📊 &nbsp;Resumen financiero</a>
+      <a class="nav-item">🧾 &nbsp;Facturación</a>
+      <a class="nav-item">🚚 &nbsp;Proveedores</a>
+    </div>
+    <div class="admin-main">
+      <div class="admin-header">
+        <div><h1>Panel del contador</h1><div class="sub">Ingresos, gastos, facturación y compras a proveedores</div></div>
+      </div>
+
+      <div class="acct-tabs">
+        <div class="acct-tab active" data-tab="resumen" onclick="switchAcctTab('resumen')">Ingresos y gastos</div>
+        <div class="acct-tab" data-tab="fel" onclick="switchAcctTab('fel')">Facturación (FEL)</div>
+        <div class="acct-tab" data-tab="proveedores" onclick="switchAcctTab('proveedores')">Proveedores e inventario</div>
+      </div>
+
+      <!-- TAB 1: Ingresos y gastos (alcance actual, control interno) -->
+      <div class="acct-panel active" id="acct-panel-resumen">
+        <div class="summary-row">
+          <div class="summary-card income"><div class="label">Ingresos hoy (ventas)</div><div class="value" id="acct-income">Q486</div><div class="sub">Tomado de Caja, en tiempo real</div></div>
+          <div class="summary-card expense"><div class="label">Gastos registrados hoy</div><div class="value" id="acct-expense">Q190</div><div class="sub">Compras + gastos operativos</div></div>
+          <div class="summary-card net"><div class="label">Utilidad del día</div><div class="value" id="acct-net">Q296</div><div class="sub">Ingresos − gastos</div></div>
+        </div>
+
+        <div class="opt-group-label" style="margin:0 0 10px;">Registrar un gasto</div>
+        <div class="expense-form">
+          <div class="form-row">
+            <div class="form-field"><label>Descripción</label><input type="text" id="exp-desc" placeholder="Ej. Pago de electricidad"></div>
+            <div class="form-field"><label>Categoría</label>
+              <select id="exp-cat">
+                <option>Ingredientes</option>
+                <option>Servicios (luz, agua, internet)</option>
+                <option>Empaques</option>
+                <option>Mantenimiento</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="form-field"><label>Monto (Q)</label><input type="number" id="exp-amount" placeholder="0.00"></div>
+            <button class="btn-add-row" onclick="addExpense()">+ Agregar</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th>Monto</th></tr></thead>
+            <tbody id="expense-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 2: Facturación FEL — referencia, fase 2 -->
+      <div class="acct-panel" id="acct-panel-fel">
+        <div class="scope-banner fel">
+          <div class="ico">⚠️</div>
+          <div>
+            <b>Vista de referencia — la conexión real con la SAT no está incluida en el alcance actual</b>
+            <p>Lo que ven aquí es un reporte de ingresos de control interno. Conectar esto con un proveedor certificado de Facturación Electrónica (FEL) ante la SAT es una segunda etapa, con su propio costo de implementación y de licencia mensual del proveedor FEL.</p>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi-card"><div class="label">Recibos internos hoy</div><div class="value" id="acct-fel-count">4</div></div>
+          <div class="kpi-card"><div class="label">Monto total emitido</div><div class="value accent" id="acct-fel-total">Q486</div></div>
+          <div class="kpi-card"><div class="label">Pendientes de cobro</div><div class="value" id="acct-fel-pending">3</div></div>
+          <div class="kpi-card"><div class="label">Facturas FEL reales</div><div class="value" style="color:var(--muted);">0 (fase 2)</div></div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Pedido</th><th>Cliente</th><th>Total</th><th>Recibo interno</th><th>Factura FEL</th></tr></thead>
+            <tbody id="acct-fel-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 3: Proveedores — funcionalidad adicional, fuera del alcance actual -->
+      <div class="acct-panel" id="acct-panel-proveedores">
+        <div class="scope-banner extra">
+          <div class="ico">🧩</div>
+          <div>
+            <b>Funcionalidad adicional — fuera del alcance y precio ya cotizados</b>
+            <p>Esto les muestra cómo se vería llevar pedidos a proveedores con entrada automática al inventario. Es trabajo nuevo, no incluido en los Q2,800 de la propuesta firmada, y se cotizaría por separado si decide agregarlo.</p>
+          </div>
+        </div>
+
+        <div class="opt-group-label" style="margin:0 0 10px;">Hacer un pedido a un proveedor</div>
+        <div class="expense-form">
+          <div class="form-row">
+            <div class="form-field"><label>Proveedor</label>
+              <select id="po-supplier">
+                <option>Distribuidora La Central (quesos y lácteos)</option>
+                <option>Harinera San Martín (masa e insumos secos)</option>
+                <option>Cárnicos del Valle (embutidos)</option>
+                <option>Empaques Guate (cajas y servilletas)</option>
+              </select>
+            </div>
+            <div class="form-field"><label>Ingrediente</label>
+              <select id="po-ingredient"></select>
+            </div>
+            <div class="form-field"><label>Cantidad</label><input type="number" id="po-qty" placeholder="0"></div>
+            <button class="btn-add-row" onclick="createPurchaseOrder()">+ Crear pedido</button>
+          </div>
+        </div>
+
+        <div class="opt-group-label" style="margin:18px 0 10px;">Pedidos a proveedores</div>
+        <div id="po-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ---------------------------------------------------------------
    DATA — menú de Luigi's Pizza (ajustar con precios reales si cambian)
 ---------------------------------------------------------------- */
 const MENU = [
-  { id:'p1', name:'Pizza Margarita', emoji:'🍕', desc:'Salsa de tomate, mozzarella y albahaca fresca.', base:55,
-    ingredients:[{n:'Extra queso',p:8},{n:'Champiñones',p:6},{n:'Aceitunas',p:5}] },
-  { id:'p2', name:'Pizza Pepperoni', emoji:'🌶️', desc:'Doble pepperoni y mozzarella derretida.', base:65,
-    ingredients:[{n:'Extra pepperoni',p:10},{n:'Extra queso',p:8},{n:'Jalapeño',p:5}] },
-  { id:'p3', name:'Pizza Hawaiana', emoji:'🍍', desc:'Jamón, piña y mozzarella.', base:62,
-    ingredients:[{n:'Extra piña',p:6},{n:'Tocino',p:9},{n:'Extra queso',p:8}] },
-  { id:'p4', name:'Pizza Vegetariana', emoji:'🫑', desc:'Pimiento, cebolla, champiñones y aceitunas.', base:60,
-    ingredients:[{n:'Extra champiñones',p:6},{n:'Aceitunas',p:5},{n:'Maíz',p:5}] },
+  { id:'p1', name:'Pizza Margarita', emoji:'🍕', cat:'Clásicas', badge:'Más vendida', desc:'Salsa de tomate, mozzarella y albahaca fresca.', base:55,
+    baseIngredients:['Mozzarella','Salsa de tomate','Albahaca fresca'],
+    extras:[{n:'Extra queso',p:8},{n:'Champiñones',p:6},{n:'Aceitunas',p:5}] },
+  { id:'p2', name:'Pizza Pepperoni', emoji:'🌶️', cat:'Clásicas', badge:'Picante', spicy:true, desc:'Doble pepperoni y mozzarella derretida.', base:65,
+    baseIngredients:['Mozzarella','Salsa de tomate','Pepperoni'],
+    extras:[{n:'Extra pepperoni',p:10},{n:'Extra queso',p:8},{n:'Jalapeño',p:5}] },
+  { id:'p3', name:'Pizza Hawaiana', emoji:'🍍', cat:'Especiales', desc:'Jamón, piña y mozzarella.', base:62,
+    baseIngredients:['Mozzarella','Salsa de tomate','Jamón','Piña'],
+    extras:[{n:'Extra piña',p:6},{n:'Tocino',p:9},{n:'Extra queso',p:8}] },
+  { id:'p4', name:'Pizza Vegetariana', emoji:'🫑', cat:'Especiales', desc:'Pimiento, cebolla, champiñones y aceitunas.', base:60,
+    baseIngredients:['Mozzarella','Salsa de tomate','Pimiento','Cebolla','Champiñones'],
+    extras:[{n:'Extra champiñones',p:6},{n:'Aceitunas',p:5},{n:'Maíz',p:5}] },
 ];
+
+const CATEGORIES = ['Todas', 'Clásicas', 'Especiales'];
 
 const SIZES = [
   { n:'Personal', mult:1 },
@@ -532,90 +861,192 @@ const INVENTORY = [
   { name:'Cajas para llevar', unit:'unidades', current:140, max:300, color:'var(--cheese)' },
 ];
 
-let currentPizza = null, currentSize = 1, currentQty = 1, currentIngredients = [];
+let currentPizza = null, currentSize = 1, currentQty = 1;
+let removedBase = [];   // booleanos: true = quitado de la receta base
+let addedExtras = [];   // booleanos: true = extra agregado
+let activeCategory = 'Todas';
+let currentOrderSource = 'cliente'; // 'cliente' = pedido desde el celular, 'caja' = tomado en tienda
 let orderCounter = 104, totalSalesToday = 486, completedToday = 4, orderCountToday = 6;
 
-/* ---------------- vista cliente: menú ---------------- */
+/* ---------------- vista cliente: categorías + menú ---------------- */
+function renderCategories(){
+  const row = document.getElementById('cat-row');
+  row.innerHTML = '';
+  CATEGORIES.forEach(cat=>{
+    const chip = document.createElement('div');
+    chip.className = 'cat-chip' + (cat===activeCategory ? ' active' : '');
+    chip.textContent = cat;
+    chip.onclick = ()=>{ activeCategory = cat; renderCategories(); renderMenu(); };
+    row.appendChild(chip);
+  });
+}
+
 function renderMenu(){
   const list = document.getElementById('menu-list');
   list.innerHTML = '';
-  MENU.forEach(pz=>{
+  const items = activeCategory === 'Todas' ? MENU : MENU.filter(p=>p.cat === activeCategory);
+  items.forEach(pz=>{
     const el = document.createElement('div');
     el.className = 'pizza-card';
-    el.onclick = ()=>openSheet(pz);
+    el.onclick = ()=>openSheet(pz, 'cliente');
     el.innerHTML = `
       <div class="pizza-thumb">${pz.emoji}</div>
       <div class="pizza-info">
-        <h3>${pz.name}</h3>
+        <div class="pizza-info-top">
+          <h3>${pz.name}</h3>
+          ${pz.badge ? `<span class="pizza-badge${pz.spicy?' spicy':''}">${pz.badge}</span>` : ''}
+        </div>
         <p>${pz.desc}</p>
-        <div class="pizza-price">Desde Q${pz.base}</div>
+        <div class="pizza-bottom">
+          <div class="pizza-price">Desde Q${pz.base}</div>
+          <div class="pizza-add-hint">Personalizar +</div>
+        </div>
       </div>`;
     list.appendChild(el);
   });
 }
 
-function openSheet(pz){
+function openSheet(pz, source){
+  currentOrderSource = source || 'cliente';
   currentPizza = pz; currentSize = 0; currentQty = 1;
-  currentIngredients = pz.ingredients.map(()=>false);
+  removedBase = pz.baseIngredients.map(()=>false);
+  addedExtras = pz.extras.map(()=>false);
 
+  document.getElementById('sheet-thumb').textContent = pz.emoji;
   document.getElementById('sheet-name').textContent = pz.name;
   document.getElementById('sheet-base-price').textContent = `Desde Q${pz.base}`;
+
+  // si lo abre el cajero, mostramos un selector de pizza arriba del tamaño (el cliente ya entra desde su tarjeta elegida)
+  const picker = document.getElementById('sheet-pizza-picker');
+  if(picker){
+    if(currentOrderSource === 'caja'){
+      picker.style.display = 'block';
+      picker.innerHTML = '';
+      MENU.forEach(p=>{
+        const chip = document.createElement('div');
+        chip.className = 'cat-chip' + (p.id === pz.id ? ' active' : '');
+        chip.textContent = p.name.replace('Pizza ','');
+        chip.onclick = ()=>openSheet(p, 'caja');
+        picker.appendChild(chip);
+      });
+    } else {
+      picker.style.display = 'none';
+    }
+  }
 
   const sizeRow = document.getElementById('size-row');
   sizeRow.innerHTML = '';
   SIZES.forEach((s,i)=>{
     const d = document.createElement('div');
     d.className = 'size-pill' + (i===0?' active':'');
-    d.textContent = s.n;
+    d.innerHTML = `<span class="sp-name">${s.n}</span><span class="sp-sub">×${s.mult}</span>`;
     d.onclick = ()=>{ currentSize=i; document.querySelectorAll('.size-pill').forEach((el,idx)=>el.classList.toggle('active', idx===i)); updateSheetTotal(); };
     sizeRow.appendChild(d);
   });
 
-  const ingList = document.getElementById('ing-list');
-  ingList.innerHTML = '';
-  pz.ingredients.forEach((ing,i)=>{
+  const removeList = document.getElementById('remove-list');
+  removeList.innerHTML = '';
+  pz.baseIngredients.forEach((ing,i)=>{
     const row = document.createElement('div');
     row.className = 'ing-row';
-    row.innerHTML = `<div><div class="ing-name">${ing.n}</div><div class="ing-extra">+Q${ing.p}</div></div><div class="toggle" id="tog-${i}"></div>`;
-    row.querySelector('.toggle').onclick = ()=>{
-      currentIngredients[i] = !currentIngredients[i];
-      document.getElementById(`tog-${i}`).classList.toggle('on', currentIngredients[i]);
-      updateSheetTotal();
-    };
-    ingList.appendChild(row);
+    row.id = `rm-row-${i}`;
+    row.innerHTML = `
+      <div><div class="ing-name">${ing}</div><div class="ing-extra">Incluido en la receta</div></div>
+      <div class="ing-toggle-btn" id="rm-btn-${i}" onclick="toggleRemove(${i})">Quitar</div>`;
+    removeList.appendChild(row);
+  });
+
+  const addList = document.getElementById('add-list');
+  addList.innerHTML = '';
+  pz.extras.forEach((ex,i)=>{
+    const row = document.createElement('div');
+    row.className = 'ing-row';
+    row.id = `add-row-${i}`;
+    row.innerHTML = `
+      <div><div class="ing-name">${ex.n}</div><div class="ing-extra">+Q${ex.p}</div></div>
+      <div class="ing-toggle-btn" id="add-btn-${i}" onclick="toggleAdd(${i})">Agregar</div>`;
+    addList.appendChild(row);
   });
 
   document.getElementById('qty-val').textContent = '1';
+
+  const submitLabel = document.getElementById('sheet-submit-label');
+  submitLabel.textContent = currentOrderSource === 'caja' ? 'Crear pedido en tienda' : 'Enviar pedido';
+
   updateSheetTotal();
   document.getElementById('sheet-overlay').classList.add('show');
 }
 
+function toggleRemove(i){
+  removedBase[i] = !removedBase[i];
+  document.getElementById(`rm-row-${i}`).classList.toggle('active-remove', removedBase[i]);
+  const btn = document.getElementById(`rm-btn-${i}`);
+  btn.textContent = removedBase[i] ? 'Quitado ✓' : 'Quitar';
+  btn.classList.toggle('is-removed', removedBase[i]);
+  updateSheetTotal();
+}
+
+function toggleAdd(i){
+  addedExtras[i] = !addedExtras[i];
+  document.getElementById(`add-row-${i}`).classList.toggle('active-add', addedExtras[i]);
+  const btn = document.getElementById(`add-btn-${i}`);
+  btn.textContent = addedExtras[i] ? 'Agregado ✓' : 'Agregar';
+  btn.classList.toggle('is-added', addedExtras[i]);
+  updateSheetTotal();
+}
+
 function closeSheet(){ document.getElementById('sheet-overlay').classList.remove('show'); }
 function changeQty(delta){ currentQty = Math.max(1, currentQty + delta); document.getElementById('qty-val').textContent = currentQty; updateSheetTotal(); }
+
 function computeUnitPrice(){
   let price = currentPizza.base * SIZES[currentSize].mult;
-  currentPizza.ingredients.forEach((ing,i)=>{ if(currentIngredients[i]) price += ing.p; });
+  currentPizza.extras.forEach((ex,i)=>{ if(addedExtras[i]) price += ex.p; });
   return Math.round(price);
 }
-function updateSheetTotal(){ document.getElementById('sheet-total').textContent = `Q${computeUnitPrice() * currentQty}`; }
+
+function updateSheetTotal(){
+  const unit = computeUnitPrice();
+  const total = unit * currentQty;
+  document.getElementById('sheet-total').textContent = `Q${total}`;
+
+  const removedNames = currentPizza.baseIngredients.filter((ing,i)=>removedBase[i]);
+  const addedNames = currentPizza.extras.filter((ex,i)=>addedExtras[i]).map(ex=>ex.n);
+
+  let html = `<div class="os-title">Tu pizza</div>`;
+  html += `<div class="os-line"><span>${currentQty}× ${currentPizza.name} (${SIZES[currentSize].n})</span><span>Q${unit} c/u</span></div>`;
+  if(removedNames.length) html += `<div class="os-line os-muted"><span>Sin: ${removedNames.join(', ')}</span><span></span></div>`;
+  if(addedNames.length) html += `<div class="os-line os-muted"><span>Con extra: ${addedNames.join(', ')}</span><span></span></div>`;
+  document.getElementById('order-summary').innerHTML = html;
+}
 
 let cart = null;
 function addToCartAndSend(){
   const unit = computeUnitPrice();
   const total = unit * currentQty;
-  const extras = currentPizza.ingredients.filter((ing,i)=>currentIngredients[i]).map(ing=>ing.n);
-  cart = { name: currentPizza.name, size: SIZES[currentSize].n, qty: currentQty, extras, total };
+  const removedNames = currentPizza.baseIngredients.filter((ing,i)=>removedBase[i]);
+  const addedNames = currentPizza.extras.filter((ex,i)=>addedExtras[i]).map(ex=>ex.n);
+  const extrasLabel = [
+    ...removedNames.map(n=>'Sin '+n),
+    ...addedNames
+  ];
+  cart = { name: currentPizza.name, size: SIZES[currentSize].n, qty: currentQty, extras: extrasLabel, total, source: currentOrderSource };
   closeSheet();
   sendOrder();
 }
 
 function sendOrder(){
   orderCounter++;
+  if(currentOrderSource === 'caja'){
+    // pedido tomado en tienda por el cajero: no hay pantalla de confirmación de cliente,
+    // simplemente entra al tablero ya marcado como "en preparación".
+    pushOrderToBoard(cart, orderCounter, true);
+    return;
+  }
   document.getElementById('order-code').textContent = '#' + orderCounter;
   document.getElementById('menu-screen').style.display = 'none';
   document.getElementById('cart-bar').classList.remove('show');
   document.getElementById('confirm-screen').classList.add('show');
-  pushOrderToBoard(cart, orderCounter);
+  pushOrderToBoard(cart, orderCounter, false);
 }
 function resetClientView(){
   document.getElementById('confirm-screen').classList.remove('show');
@@ -625,11 +1056,11 @@ function resetClientView(){
 /* ---------------- tablero compartido (vista Caja) ---------------- */
 let orders = {
   prep: [
-    { id:'#101', time:'hace 6 min', items:[{name:'Pizza Pepperoni', size:'Mediana', qty:1, extras:['Extra queso']}], total:73 },
-    { id:'#102', time:'hace 4 min', items:[{name:'Pizza Margarita', size:'Familiar', qty:2, extras:[]}], total:209 },
+    { id:'#101', time:'hace 6 min', items:[{name:'Pizza Pepperoni', size:'Mediana', qty:1, extras:['Extra queso']}], total:73, source:'cliente' },
+    { id:'#102', time:'hace 4 min', items:[{name:'Pizza Margarita', size:'Familiar', qty:2, extras:[]}], total:209, source:'caja' },
   ],
   ready: [
-    { id:'#103', time:'hace 1 min', items:[{name:'Pizza Hawaiana', size:'Personal', qty:1, extras:['Tocino']}], total:71 },
+    { id:'#103', time:'hace 1 min', items:[{name:'Pizza Hawaiana', size:'Personal', qty:1, extras:['Tocino']}], total:71, source:'cliente' },
   ]
 };
 
@@ -667,8 +1098,16 @@ function renderColumn(elId, list, stage){
         <div class="rline" style="margin-top:6px; font-weight:700; color:var(--crust);"><span>Total</span><span>Q${o.total}</span></div>
         <div style="margin-top:6px; font-size:10px; color:var(--muted);">Recibo de control interno — no es factura fiscal.</div>
       </div>`;
+    const sourceLabel = o.source === 'caja' ? 'En tienda' : 'Desde celular';
+    const sourceClass = o.source === 'caja' ? 'src-caja' : 'src-cliente';
     card.innerHTML = `
-      <div class="order-top"><div class="order-id">${o.id}</div><div class="order-time">${o.time}</div></div>
+      <div class="order-top">
+        <div class="order-id">${o.id}</div>
+        <div style="text-align:right;">
+          <span class="order-source ${sourceClass}">${sourceLabel}</span>
+          <div class="order-time">${o.time}</div>
+        </div>
+      </div>
       <div class="order-items">${orderItemsHtml(o.items)}</div>
       <div class="order-total">Total: Q${o.total}</div>
       ${actionHtml}`;
@@ -695,8 +1134,13 @@ function completeOrder(id){
   renderFelTable();
 }
 
-function pushOrderToBoard(cartData, code){
-  const newOrder = { id:'#'+code, time:'justo ahora', items:[{ name:cartData.name, size:cartData.size, qty:cartData.qty, extras:cartData.extras }], total:cartData.total, flash:true };
+function pushOrderToBoard(cartData, code, fromCaja){
+  const newOrder = {
+    id:'#'+code, time:'justo ahora',
+    items:[{ name:cartData.name, size:cartData.size, qty:cartData.qty, extras:cartData.extras }],
+    total:cartData.total, flash:true,
+    source: cartData.source || 'cliente'
+  };
   orders.prep.unshift(newOrder);
   totalSalesToday += cartData.total;
   orderCountToday += 1;
@@ -783,13 +1227,179 @@ function renderInventory(){
 
 /* ---------------- view switcher ---------------- */
 function switchView(name){
-  ['cliente','caja','admin','inv'].forEach(v=>{
+  ['cliente','caja','admin','inv','contador'].forEach(v=>{
     document.getElementById('view-'+v).classList.toggle('active', v===name);
     document.getElementById('btn-view-'+v).classList.toggle('active', v===name);
+  });
+  if(name === 'contador') renderAcctView();
+}
+
+/* ============================================================
+   VISTA CONTADOR — ingresos/gastos (alcance actual),
+   FEL (referencia, fase 2) y proveedores (adicional, fuera de alcance)
+   ============================================================ */
+function switchAcctTab(tab){
+  ['resumen','fel','proveedores'].forEach(t=>{
+    document.querySelector(`.acct-tab[data-tab="${t}"]`).classList.toggle('active', t===tab);
+    document.getElementById('acct-panel-'+t).classList.toggle('active', t===tab);
+  });
+}
+
+let expenses = [
+  { date:'27/06', desc:'Compra de queso mozzarella', cat:'Ingredientes', amount:120 },
+  { date:'27/06', desc:'Pago de internet', cat:'Servicios (luz, agua, internet)', amount:70 },
+];
+
+function renderAcctView(){
+  // ingresos: se toman directo de lo ya cobrado en Caja
+  const income = totalSalesToday;
+  const expenseTotal = expenses.reduce((sum,e)=>sum+e.amount, 0);
+  const net = income - expenseTotal;
+
+  document.getElementById('acct-income').textContent = 'Q' + income;
+  document.getElementById('acct-expense').textContent = 'Q' + expenseTotal;
+  document.getElementById('acct-net').textContent = 'Q' + net;
+
+  renderExpenseTable();
+  renderAcctFelTable();
+  renderIngredientSelect();
+  renderPurchaseOrders();
+}
+
+function renderExpenseTable(){
+  const tbody = document.getElementById('expense-table-body');
+  tbody.innerHTML = '';
+  if(expenses.length === 0){
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--muted);">Sin gastos registrados hoy</td></tr>`;
+    return;
+  }
+  expenses.forEach(e=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${e.date}</td><td>${e.desc}</td><td>${e.cat}</td><td style="font-weight:700; color:var(--tomato);">Q${e.amount}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function addExpense(){
+  const desc = document.getElementById('exp-desc').value.trim();
+  const cat = document.getElementById('exp-cat').value;
+  const amount = parseFloat(document.getElementById('exp-amount').value);
+  if(!desc || !amount || amount <= 0){
+    alert('Completa la descripción y un monto válido antes de agregar el gasto.');
+    return;
+  }
+  expenses.unshift({ date:'27/06', desc, cat, amount: Math.round(amount) });
+  document.getElementById('exp-desc').value = '';
+  document.getElementById('exp-amount').value = '';
+  renderAcctView();
+}
+
+function renderAcctFelTable(){
+  const allOrders = [...orders.ready, ...orders.prep];
+  const tbody = document.getElementById('acct-fel-table-body');
+
+  document.getElementById('acct-fel-count').textContent = completedToday;
+  document.getElementById('acct-fel-total').textContent = 'Q' + totalSalesToday;
+  document.getElementById('acct-fel-pending').textContent = allOrders.length;
+
+  tbody.innerHTML = '';
+  if(allOrders.length === 0){
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--muted);">Sin pedidos registrados todavía hoy</td></tr>`;
+    return;
+  }
+  allOrders.slice(0,6).forEach(o=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${o.id}</td>
+      <td>Cliente en tienda</td>
+      <td>Q${o.total}</td>
+      <td><span class="status-chip cobrado">Emitido</span></td>
+      <td><span class="status-chip fel">No disponible (fase 2)</span></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+/* --- proveedores: pedido de compra que, al recibirse, suma directo al inventario --- */
+let purchaseOrders = [
+  { id:'#PO-12', supplier:'Distribuidora La Central (quesos y lácteos)', ingredient:'Mozzarella', qty:5, unit:'kg', status:'pendiente', total:5*45 },
+];
+let poCounter = 12;
+
+function renderIngredientSelect(){
+  const sel = document.getElementById('po-ingredient');
+  if(!sel) return;
+  sel.innerHTML = '';
+  INVENTORY.forEach(item=>{
+    const opt = document.createElement('option');
+    opt.value = item.name;
+    opt.textContent = `${item.name} (${item.unit})`;
+    sel.appendChild(opt);
+  });
+}
+
+function createPurchaseOrder(){
+  const supplier = document.getElementById('po-supplier').value;
+  const ingredientName = document.getElementById('po-ingredient').value;
+  const qty = parseFloat(document.getElementById('po-qty').value);
+  if(!qty || qty <= 0){
+    alert('Indica una cantidad válida para el pedido.');
+    return;
+  }
+  const invItem = INVENTORY.find(i=>i.name === ingredientName);
+  poCounter++;
+  purchaseOrders.unshift({
+    id: '#PO-' + poCounter,
+    supplier, ingredient: ingredientName, qty,
+    unit: invItem ? invItem.unit : 'unidades',
+    status: 'pendiente',
+    total: Math.round(qty * 18) // costo estimado de referencia para la demo
+  });
+  document.getElementById('po-qty').value = '';
+  renderPurchaseOrders();
+}
+
+function receivePurchaseOrder(id){
+  const po = purchaseOrders.find(p=>p.id === id);
+  if(!po || po.status === 'recibido') return;
+  po.status = 'recibido';
+
+  // al recibir el pedido, la cantidad entra directo al inventario
+  const invItem = INVENTORY.find(i=>i.name === po.ingredient);
+  if(invItem){
+    invItem.current = Math.min(invItem.max, invItem.current + po.qty);
+  }
+  renderPurchaseOrders();
+  renderInventory(); // refresca también la vista Inventario si se visita después
+}
+
+function renderPurchaseOrders(){
+  const list = document.getElementById('po-list');
+  if(!list) return;
+  list.innerHTML = '';
+  if(purchaseOrders.length === 0){
+    list.innerHTML = `<div class="empty-col">Sin pedidos a proveedores todavía</div>`;
+    return;
+  }
+  purchaseOrders.forEach(po=>{
+    const card = document.createElement('div');
+    card.className = 'po-card';
+    const actionHtml = po.status === 'pendiente'
+      ? `<button class="po-action" onclick="receivePurchaseOrder('${po.id}')">Marcar como recibido (suma al inventario)</button>`
+      : `<button class="po-action" disabled>Ya recibido y sumado al inventario</button>`;
+    card.innerHTML = `
+      <div class="po-top">
+        <div><div class="po-id">${po.id}</div><div class="po-supplier">${po.supplier}</div></div>
+        <span class="po-status ${po.status}">${po.status === 'pendiente' ? 'Pendiente' : 'Recibido'}</span>
+      </div>
+      <div class="po-items"><b>${po.qty} ${po.unit}</b> de ${po.ingredient}</div>
+      <div class="po-total">Costo estimado: Q${po.total}</div>
+      ${actionHtml}`;
+    list.appendChild(card);
   });
 }
 
 /* ---------------- init ---------------- */
+renderCategories();
 renderMenu();
 renderBoard();
 renderFelTable();
